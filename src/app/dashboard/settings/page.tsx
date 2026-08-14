@@ -61,10 +61,11 @@ export default function SettingsPage() {
   };
 
   return (
-    <div>
-      <h1 style={{ fontSize: '2rem', fontWeight: 600, marginBottom: '2rem' }}>Settings</h1>
+      <div className="page-header">
+        <h1 className="page-title">Settings</h1>
+      </div>
       
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: '2rem' }}>
+      <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem' }}>
         
         {/* Manage Staff Accounts */}
         <div className="glass" style={{ padding: '2rem' }}>
@@ -76,9 +77,10 @@ export default function SettingsPage() {
             Staff members can only access the Scanner tab. They cannot view analytics, reports, or settings.
           </p>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 2fr', gap: '3rem' }}>
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '3rem' }}>
             
             {/* Create Form */}
+            <div style={{ flex: '1 1 300px' }}>
             <form onSubmit={handleCreateStaff} style={{ background: 'rgba(0,0,0,0.1)', padding: '1.5rem', borderRadius: '12px' }}>
               <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem' }}>Create New Staff</h3>
               <div className="mb-4">
@@ -116,9 +118,10 @@ export default function SettingsPage() {
                 {creating ? 'Creating...' : 'Create Staff Account'}
               </button>
             </form>
+            </div>
 
             {/* List */}
-            <div>
+            <div style={{ flex: '2 1 300px' }}>
               <h3 style={{ fontSize: '1rem', fontWeight: 600, marginBottom: '1rem' }}>Active Staff Accounts</h3>
               {loading ? (
                 <div style={{ color: 'var(--text-secondary)' }}>Loading staff...</div>

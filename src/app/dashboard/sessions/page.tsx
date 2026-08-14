@@ -65,11 +65,13 @@ export default function SessionsPage() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '2rem', fontWeight: 600 }}>Event Sessions</h1>
-        <button onClick={() => setShowModal(true)} className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: 'auto' }}>
-          <Plus size={18} /> Create Session
-        </button>
+      <div className="page-header">
+        <h1 className="page-title">Event Sessions</h1>
+        <div className="header-actions">
+          <button onClick={() => setShowModal(true)} className="btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+            <Plus size={18} /> Add Session
+          </button>
+        </div>
       </div>
 
       <div className="glass" style={{ padding: '1.5rem' }}>

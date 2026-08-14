@@ -38,28 +38,28 @@ export default function PeoplePage() {
 
   return (
     <div>
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '2rem' }}>
-        <h1 style={{ fontSize: '2rem', fontWeight: 600 }}>People Directory</h1>
-        <div style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+      <div className="page-header">
+        <h1 className="page-title">People Directory</h1>
+        <div className="header-actions">
           <a 
             href="/api/people/export-qr"
             className="btn-primary" 
             style={{ 
               display: 'flex', 
               alignItems: 'center', 
+              justifyContent: 'center',
               gap: '0.5rem', 
-              width: 'auto',
               backgroundColor: 'var(--success)',
               textDecoration: 'none'
             }}
           >
-            <Download size={18} /> Bulk Download QR
+            <Download size={18} /> Bulk QR
           </a>
-          <Link href="/dashboard/people/import" className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: 'auto' }}>
-            <Upload size={18} /> Import Excel
+          <Link href="/dashboard/people/import" className="btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+            <Upload size={18} /> Import
           </Link>
-          <Link href="/dashboard/people/new" className="btn-primary" style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', width: 'auto' }}>
-            <UserPlus size={18} /> Add Person
+          <Link href="/dashboard/people/new" className="btn-primary" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
+            <UserPlus size={18} /> Add
           </Link>
         </div>
       </div>

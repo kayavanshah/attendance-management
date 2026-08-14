@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { usePathname, useRouter } from 'next/navigation';
-import { LayoutDashboard, Users, Calendar, Camera, FileText, Settings, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, Calendar, Camera, FileText, Settings, LogOut, Menu, X } from 'lucide-react';
 import styles from './dashboard.module.css';
 
 const allNavItems = [
@@ -19,6 +19,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
   const pathname = usePathname();
   const router = useRouter();
   const [role, setRole] = useState<string | null>(null);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   useEffect(() => {
     fetch('/api/auth/me')
@@ -36,6 +37,11 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
     router.refresh();
   };
 
+  // Close mobile menu on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+  }, [pathname]);
+
   // Filter items based on role
   const navItems = role === 'STAFF' 
     ? allNavItems.filter(item => item.name === 'Scanner')
@@ -43,8 +49,37 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
 
   return (
     <div className={styles.layout}>
-      <aside className={styles.sidebar}>
-        <div className={styles.sidebarHeader}>Attendance Pro</div>
+      
+      {/* Mobile Header */}
+      <div className={styles.mobileHeader}>
+        <div className={styles.mobileHeaderTitle}>Attendance Pro</div>
+        <button 
+          onClick={() => setIsMobileMenuOpen(true)}
+          style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', padding: '0.5rem' }}
+        >
+          <Menu size={24} />
+        </button>
+      </div>
+
+      {/* Overlay */}
+      <div 
+        className={`${styles.overlay} ${isMobileMenuOpen ? styles.open : ''}`} 
+        onClick={() => setIsMobileMenuOpen(false)}
+      />
+
+      <aside className={`${styles.sidebar} ${isMobileMenuOpen ? styles.open : ''}`}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '0 1rem', marginBottom: '2rem' }}>
+          <div className={styles.sidebarHeader} style={{ margin: 0, padding: 0 }}>Attendance Pro</div>
+          
+          {/* Close button inside sidebar on mobile */}
+          <button 
+            onClick={() => setIsMobileMenuOpen(false)}
+            className={styles.mobileHeader} // re-using mobileHeader to show only on mobile
+            style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)' }}
+          >
+            <X size={24} />
+          </button>
+        </div>
         
         {role && (
           <div style={{ padding: '0 1.5rem 1.5rem', fontSize: '0.75rem', color: 'var(--text-secondary)' }}>
