@@ -1,6 +1,14 @@
 import QRCode from 'qrcode';
 import { v4 as uuidv4 } from 'uuid';
-import { createCanvas, loadImage } from 'canvas';
+import { createCanvas, loadImage, registerFont } from 'canvas';
+import path from 'path';
+
+try {
+  registerFont(path.join(process.cwd(), 'src/fonts/Roboto-Bold.ttf'), { family: 'Roboto', weight: 'bold' });
+  registerFont(path.join(process.cwd(), 'src/fonts/Roboto-Regular.ttf'), { family: 'Roboto', weight: 'normal' });
+} catch (e) {
+  console.warn('Failed to load local fonts for canvas, falling back to system fonts:', e);
+}
 
 export function generateSecureToken() {
   return uuidv4();
@@ -47,12 +55,12 @@ export async function generateQRCodeWithLabel(token: string, name: string, id: s
 
     // Draw Name
     ctx.fillStyle = '#0f172a';
-    ctx.font = 'bold 24px sans-serif';
+    ctx.font = 'bold 24px Roboto, sans-serif';
     ctx.textAlign = 'center';
     ctx.fillText(name, 200, 430);
 
     // Draw ID
-    ctx.font = '20px sans-serif';
+    ctx.font = '20px Roboto, sans-serif';
     ctx.fillStyle = '#475569';
     ctx.fillText(`ID: ${id}`, 200, 460);
 
