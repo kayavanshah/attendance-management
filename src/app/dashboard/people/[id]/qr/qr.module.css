@@ -1,0 +1,90 @@
+.qrCardContainer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  border: 1px dashed var(--border);
+}
+
+.qrCard {
+  width: 350px;
+  background: white;
+  color: black;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  border: 2px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardHeader {
+  background: var(--primary);
+  color: white;
+  padding: 1.5rem 1rem;
+  text-align: center;
+}
+
+.orgName {
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cardBody {
+  padding: 2rem 1rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.personName {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+  text-align: center;
+}
+
+.personId {
+  font-size: 1rem;
+  color: #64748b;
+  margin-bottom: 1.5rem;
+}
+
+.qrImage {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 1.5rem;
+}
+
+.instruction {
+  font-size: 0.875rem;
+  color: #94a3b8;
+  font-weight: 500;
+}
+
+.actions {
+  display: flex;
+  gap: 1rem;
+  margin-top: 2rem;
+  justify-content: center;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .qrCard, .qrCard * {
+    visibility: visible;
+  }
+  .qrCard {
+    position: absolute;
+    left: 0;
+    top: 0;
+    box-shadow: none;
+    border: 2px solid black;
+  }
+}

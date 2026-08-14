@@ -1,0 +1,65 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Admin {
+  id            String   @id @default(uuid())
+  name          String
+  email         String   @unique
+  password_hash String
+  role          String   @default("SUPER_ADMIN") // SUPER_ADMIN or STAFF
+  created_at    DateTime @default(now())
+  updated_at    DateTime @updatedAt
+}
+
+model Person {
+  id                     String   @id @default(uuid())
+  organization_person_id String   @unique
+  name                   String
+  age                    Int
+  phone                  String
+  qr_token               String   @unique
+  qr_status              String   @default("Active") // Active, Revoked
+  created_at             DateTime @default(now())
+  updated_at             DateTime @updatedAt
+
+  attendances Attendance[]
+}
+
+model Session {
+  id           String   @id @default(uuid())
+  name         String
+  date         String   // YYYY-MM-DD
+  start_time   String
+  end_time     String
+  session_code String   @unique @default(uuid())
+  status       String   @default("Closed") // Active, Closed
+  created_at   DateTime @default(now())
+  updated_at   DateTime @updatedAt
+
+  attendances Attendance[]
+}
+
+model Attendance {
+  id         String   @id @default(uuid())
+  person_id  String
+  session_id String
+  status     String   @default("Present") // Present, Late
+  scanned_at DateTime @default(now())
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  person  Person  @relation(fields: [person_id], references: [id])
+  session Session @relation(fields: [session_id], references: [id])
+
+  @@unique([person_id, session_id])
+}
