@@ -8,12 +8,15 @@ export async function POST(req: NextRequest) {
     if (!token) return NextResponse.json({ error: 'No QR token provided' }, { status: 400 });
     if (!session_id) return NextResponse.json({ error: 'No session selected' }, { status: 400 });
 
-    const person = await prisma.person.findUnique({ where: { qr_token: token } });
+    // Fetch person and session concurrently to save 50% latency
+    const [person, session] = await Promise.all([
+      prisma.person.findUnique({ where: { qr_token: token } }),
+      prisma.session.findUnique({ where: { id: session_id } })
+    ]);
+
     if (!person) return NextResponse.json({ error: 'This QR code is not active.' }, { status: 404 });
     if (person.qr_status !== 'Active') return NextResponse.json({ error: 'This QR code has been revoked.' }, { status: 403 });
 
-    // Verify session exists and is active
-    const session = await prisma.session.findUnique({ where: { id: session_id } });
     if (!session) return NextResponse.json({ error: 'Invalid session selected.' }, { status: 400 });
     if (session.status !== 'Active') return NextResponse.json({ error: 'This session is closed. Attendance cannot be marked.' }, { status: 403 });
 

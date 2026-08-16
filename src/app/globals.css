@@ -94,6 +94,11 @@ a {
   box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
 }
 
+select.input-field option {
+  background-color: var(--background-start);
+  color: var(--text-primary);
+}
+
 .label {
   display: block;
   font-size: 0.875rem;

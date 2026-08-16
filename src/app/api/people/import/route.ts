@@ -25,6 +25,9 @@ export async function POST(req: NextRequest) {
     let duplicate_ids = 0;
     const errorDetails = [];
 
+    const validPeople = [];
+    const seenIds = new Set();
+
     for (const row of rows) {
       // Normalize row keys (lowercase and trimmed)
       const normalizedRow: any = {};
@@ -50,30 +53,35 @@ export async function POST(req: NextRequest) {
         continue;
       }
 
-      try {
-        const exists = await prisma.person.findUnique({
-          where: { organization_person_id: orgId }
-        });
-
-        if (exists) {
-          duplicate_ids++;
-          continue;
-        }
-
-        await prisma.person.create({
-          data: {
-            organization_person_id: orgId,
-            name,
-            age,
-            phone,
-            qr_token: generateSecureToken(),
-          }
-        });
-        successes++;
-      } catch (err: any) {
-        errors++;
-        errorDetails.push(`Error inserting ID ${orgId}: ${err.message}`);
+      if (seenIds.has(orgId)) {
+        duplicate_ids++;
+        continue;
       }
+      
+      seenIds.add(orgId);
+      
+      validPeople.push({
+        organization_person_id: orgId,
+        name,
+        age,
+        phone,
+        qr_token: generateSecureToken(),
+      });
+    }
+
+    try {
+      if (validPeople.length > 0) {
+        const result = await prisma.person.createMany({
+          data: validPeople,
+          skipDuplicates: true
+        });
+        successes = result.count;
+        duplicate_ids += (validPeople.length - result.count);
+      }
+    } catch (err: any) {
+      console.error(err);
+      errors = validPeople.length;
+      errorDetails.push('Database bulk insert failed: ' + err.message);
     }
 
     return NextResponse.json({

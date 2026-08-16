@@ -91,7 +91,7 @@ export default function ScannerPage() {
 
   if (!activeSession) {
     return (
-      <div className="glass" style={{ padding: '3rem', maxWidth: '500px', margin: '4rem auto', textAlign: 'center' }}>
+      <div className="glass" style={{ padding: '2rem 1.5rem', width: '90%', maxWidth: '500px', margin: '2rem auto', textAlign: 'center' }}>
         <Calendar size={48} color="var(--primary)" style={{ margin: '0 auto 1.5rem auto' }} />
         <h2 style={{ fontSize: '1.5rem', marginBottom: '1rem', fontWeight: 600 }}>Select Session</h2>
         <p style={{ color: 'var(--text-secondary)', marginBottom: '2rem' }}>
