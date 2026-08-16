@@ -11,6 +11,8 @@ export default function ScannerPage() {
   const [scanResult, setScanResult] = useState<any>(null);
   const [isScanning, setIsScanning] = useState(false);
   const scannerRef = useRef<Html5QrcodeScanner | null>(null);
+  const isScanningRef = useRef(false);
+  const lastScannedRef = useRef<string | null>(null);
 
   useEffect(() => {
     fetch('/api/sessions')
@@ -36,11 +38,16 @@ export default function ScannerPage() {
     }
     setActiveSession(null);
     setSelectedSessionId('');
+    lastScannedRef.current = null;
   };
 
   const handleScan = async (decodedText: string) => {
-    if (isScanning || !activeSession) return;
+    // Synchronous check to prevent race conditions from rapid successive scans
+    if (isScanningRef.current || !activeSession || lastScannedRef.current === decodedText) return;
+    
+    isScanningRef.current = true;
     setIsScanning(true);
+    lastScannedRef.current = decodedText;
     
     try {
       const res = await fetch('/api/attendance/scan', {
@@ -56,14 +63,23 @@ export default function ScannerPage() {
         ...data
       });
 
+      // Clear the result and unlock scanning after 2.5 seconds
       setTimeout(() => {
         setScanResult(null);
         setIsScanning(false);
-      }, 3000);
+        isScanningRef.current = false;
+        // Keep lastScannedRef for a bit longer so they don't accidentally double scan the same code if they hold it there
+        setTimeout(() => { lastScannedRef.current = null; }, 2000);
+      }, 2500);
 
     } catch (err) {
       setScanResult({ success: false, error: 'Network error' });
-      setTimeout(() => { setScanResult(null); setIsScanning(false); }, 3000);
+      setTimeout(() => { 
+        setScanResult(null); 
+        setIsScanning(false); 
+        isScanningRef.current = false; 
+        lastScannedRef.current = null;
+      }, 2500);
     }
   };
 
